@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>solar</title>
+  <style type="text/css">
+     body{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: grey;
+      color: white;
+     }
+
+     button{
+      background-color: black;
+      color: white;
+     }
+     button:hover{
+      background-color: gray;
+     }
+     .buttons{
+      display: flex;
+      flex-direction: column;
+     }
+     .form{
+      margin-top: 200px;
+     }
+
+
+  </style>
+</head>
+<body>
+<div class='form'> 
+<input type="text" class="bill" placeholder="monthly bill" required>
+<br/><br/>
+<input type="text" class="kwh" placeholder="cost per kwh">
+<br/><br/>
+<input type="text" class="sqft" placeholder="square feet">
+<br/><br/>
+
+<div class="a">
+<input type="radio" name="colors" value="commercial"  checked class='comm'>commercial
+<input type="radio" name="colors" value="residential" class="res">residential
+</div>
+<br/>
+<div class="buttons">
+<button class="btn">SUBMIT</button>
+<button class="btn2">RESET</button>
+</div>
+<p class="residual"> </p>
+<p class="solar"> </p>
+</div>
+<script type="text/javascript">
+
+  let month_bill = document.querySelector('.bill')
+  let cost_kwh =   document.querySelector('.kwh')
+  let square_feet = document.querySelector('.sqft')
+  let commercial = document.querySelector('.comm')
+  let residential = document.querySelector('.res')
+  let btn = document.querySelector('.btn')
+  let res = document.querySelector('.residual')
+  let sol = document.querySelector('.solar')
+
+
+ getDefault = function(commercial) {
+    
+    var defaults 
+    if(commercial.checked){
+      defaults = .12
+    }else{
+      defaults = .25
+    }
+    
+    return defaults
+}
+
+const getSystemSize = (monthlyBill, costPerKwh )=>{
+     let kwhPerYear
+     let systemSize
+     let costKwh 
+     cost_kwh.value ? costKwh = costPerKwh : costKwh = getDefault(commercial) 
+     kwhPerYear = (12 * Number(monthlyBill))/costKwh
+     systemSize = (kwhPerYear/ 1.46) /1000
+     return systemSize
+}
+
+const getPrice = (systemSize) => {
+   const interest = .07
+   const formula = interest/12 * (1 + interest/12) ** 120/((1+ interest/12) ** 120 - 1)
+   let costAfterIncentive
+   let price
+   costAfterIncentive = systemSize * 2000 * .6
+   price = costAfterIncentive * formula
+   return price 
+}
+
+const result = (monthlyBill, squareFootage) => {
+     let systemSize
+     let getSqft
+     let solar_price
+     let residual 
+     let ratio
+     let newSystemSize
+     systemSize = getSystemSize(month_bill.value, cost_kwh.value )
+     getSqft = systemSize * 6.25 * 10.764
+     if(squareFootage < getSqft){
+         ratio = squareFootage/getSqft
+         newSystemSize = systemSize * ratio
+         residual = Math.round(monthlyBill - monthlyBill * ratio)
+         solar_price = Math.round(getPrice(newSystemSize))      
+     }else{
+        residual = 0
+        solar_price = Math.round(getPrice(systemSize))     
+     }
+       document.querySelector('.residual').innerText = 'Residual: $' + residual
+       document.querySelector('.solar').innerText = 'Solar: $' + solar_price
+}
+
+const reset = () => {
+     document.querySelector('.bill').value = ''
+     document.querySelector('.kwh').value = ''
+     document.querySelector('.sqft').value = ''
+     document.querySelector('.residual').innerText = ''
+     document.querySelector('.solar').innerText = ''
+ }
+
+
+ document.querySelector('.btn'). addEventListener('click', function(){
+      if(!month_bill.value || !square_feet.value || 
+        month_bill.value <= 0 || square_feet.value <= 0){
+        alert('enter correct information')
+      }else{
+      result(month_bill.value, square_feet.value)
+      }
+}) 
+
+ document.querySelector('.btn2'). addEventListener('click', function(){
+      reset()
+
+})
+
+</script>
+
+</body>
+</html>
