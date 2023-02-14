@@ -83,7 +83,7 @@ const getSystemSize = (monthlyBill, costPerKwh )=>{
      cost_kwh.value ? costKwh = costPerKwh : costKwh = getDefault(commercial) 
      kwhPerYear = (12 * Number(monthlyBill))/costKwh
      systemSize = (kwhPerYear/ 1.46) /1000
-     document.querySelector('.ckwh').innerText='cost per kwh: '+costKwh
+     document.querySelector('.ckwh').innerText='cost per kwh: $'+costKwh
      return systemSize
 }
 
