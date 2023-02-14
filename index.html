@@ -48,6 +48,7 @@
 <button class="btn">SUBMIT</button>
 <button class="btn2">RESET</button>
 </div>
+<p class="ckwh"> </p> 
 <p class="residual"> </p>
 <p class="solar"> </p>
 </div>
@@ -82,6 +83,7 @@ const getSystemSize = (monthlyBill, costPerKwh )=>{
      cost_kwh.value ? costKwh = costPerKwh : costKwh = getDefault(commercial) 
      kwhPerYear = (12 * Number(monthlyBill))/costKwh
      systemSize = (kwhPerYear/ 1.46) /1000
+     document.querySelector('.ckwh').innerText='cost per kwh: '+costKwh
      return systemSize
 }
 
@@ -113,8 +115,8 @@ const result = (monthlyBill, squareFootage) => {
         residual = 0
         solar_price = Math.round(getPrice(systemSize))     
      }
-       document.querySelector('.residual').innerText = 'Residual: $' + residual
-       document.querySelector('.solar').innerText = 'Solar: $' + solar_price
+       document.querySelector('.residual').innerText = 'Residual electric bill: $' + residual
+       document.querySelector('.solar').innerText = 'Monthly solar bill: $' + solar_price
 }
 
 const reset = () => {
